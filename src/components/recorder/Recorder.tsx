@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectDateStart, start, stop } from '../../redux/recorder';
 import cx from 'classnames';
 import './Recorder.css';
+import { addZero } from '../../lib/utils';
+import { createUserEvent } from '../../redux/userEvents';
 
 const Recorder = () => {
   const disptach = useDispatch();
@@ -14,6 +16,7 @@ const Recorder = () => {
   const handleClick = () => {
     if (started) {
       window.clearInterval(interval.current);
+      disptach(createUserEvent());
       disptach(stop())
       return;
     }
@@ -28,8 +31,6 @@ const Recorder = () => {
       window.clearInterval(interval.current); // to avoid memory leaks?
     }
   }, [])
-
-  const addZero = (num: number) => (num < 10 ? `0${num}` : `${num}`);
 
   let seconds = started ? Math.floor((Date.now() - new Date(dateStart).getTime()) / 1000) : 0;
   const hours = seconds ? Math.floor(seconds / 3600) : 0;
